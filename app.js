@@ -4,7 +4,7 @@ const app = express();
 app.use(express.json());
 
 app.get('/inicioServidor', (req, res) => {
-    res.send('<h1>El servidor funciona correctamente<h1>');
+    res.send('<h1>El servidor funciona correctamente</h1>');
 });
 
 app.listen(3000, ()=>{
