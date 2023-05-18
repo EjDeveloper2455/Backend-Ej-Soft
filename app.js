@@ -7,6 +7,6 @@ app.get('/inicioServidor', (req, res) => {
     res.send('<h1>El servidor funciona correctamente</h1>');
 });
 
-app.listen(3000, ()=>{
-    console.log('El servidor se ha iniciado en el puerto 3000');
+app.listen(8080, ()=>{
+    console.log('El servidor se ha iniciado en el puerto 8080');
 });
