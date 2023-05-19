@@ -12,7 +12,7 @@ app.set('port',8080);
 app.use(morgan('dev'));
 
 //Rutes
-app.use(userRoutes);
+app.use("/api/user/",userRoutes);
 
 
 export default app;
