@@ -28,6 +28,7 @@ const signUp = async (req,res) =>{
 const login = async(req, res) =>{
     try{
         const {email,password} = req.body;
+        const connection = await getConnection();
         const result = await connection.query("Select usuario_email as email, usuario_password as password"
         +", usuario_rol as rol from tbl_usuario where usuario_email = "+email+" and usuario_password = "+password+";");
         //console.log(user.email+" - "+user.password);
