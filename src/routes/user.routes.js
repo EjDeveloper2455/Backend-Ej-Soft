@@ -4,4 +4,5 @@ const router = Router();
 
 router.get("/",auth.getUser);
 router.post("/",auth.signUp);
+router.post("/login",auth.login);
 export default router;

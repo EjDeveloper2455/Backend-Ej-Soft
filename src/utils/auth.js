@@ -51,5 +51,5 @@ const login = async(req, res) =>{
 
 
 export const methods = {
-    signUp,getUser
+    signUp,getUser,login
 }
