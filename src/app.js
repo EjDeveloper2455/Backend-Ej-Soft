@@ -4,13 +4,13 @@ import userRoutes from './routes/user.routes';
 
 
 const app = express();
-//app.use(express.json());
+
 
 app.set('port',8080);
 
 //Middlewares
 app.use(morgan('dev'));
-
+app.use(express.json());
 //Rutes
 app.use("/api/user/",userRoutes);
 
