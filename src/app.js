@@ -6,7 +6,7 @@ import userRoutes from './routes/user.routes';
 const app = express();
 
 
-app.set('port',5173);
+app.set('port',80);
 
 //Middlewares
 app.use(morgan('dev'));
