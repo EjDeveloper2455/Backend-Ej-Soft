@@ -38,18 +38,17 @@ const login = async(req, res) =>{
     try{
         const {email,password} = req.body;
         const connection = await getConnection();
-        const result = await connection.query("Select usuario_email as email, usuario_password as password"
-        +", usuario_rol as rol from tbl_usuario where usuario_email = '"+email+"';");
-        if(!result){
+        const result = await connection.query("call sp_login(?)",[email]);
+        if(result[0][0].length == 0){
             res.status(401).send('Email o contraseña incorrecta');
             return;
         }
         console.log(password);
-        const isMatch = await bcrypt.compare(password, result[0].password);
+        const isMatch = await bcrypt.compare(password, result[0][0].password);
         if(!isMatch){
             res.status(401).send('Email o contraseña incorrecta');
         }else{
-            const user = {"Email": result[0].email,"Rol": result[0].rol};
+            const user = {"Email": result[0][0].email,"Rol": result[0][0].rol,"Nombre": result[0][0].nombre};
             const payload = {user};
             
             const token = jwt.sign(payload, SECRET_KEY);
