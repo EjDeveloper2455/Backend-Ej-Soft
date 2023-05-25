@@ -6,13 +6,16 @@ import userRoutes from './routes/user.routes';
 const app = express();
 
 
-app.set('port',8080);
+app.set('port',80);
 
 //Middlewares
 app.use(morgan('dev'));
 app.use(express.json());
 //Rutes
 app.use("/api/user/",userRoutes);
+app.get("/api/confirm/",(req,res)=>{
+    res.send("El servidor esta corriendo");
+});
 
 
 export default app;
