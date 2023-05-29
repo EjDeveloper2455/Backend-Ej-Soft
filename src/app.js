@@ -1,6 +1,7 @@
 import express from 'express';
 import morgan from 'morgan';
 import userRoutes from './routes/user.routes';
+import empleadoRoutes from './routes/empleado.routes';
 
 
 const app = express();
@@ -13,6 +14,7 @@ app.use(morgan('dev'));
 app.use(express.json());
 //Rutes
 app.use("/api/user/",userRoutes);
+app.use("/api/empleado/",empleadoRoutes);
 app.get("/api/confirm/",(req,res)=>{
     res.send("El servidor esta corriendo");
 });
