@@ -5,6 +5,42 @@ const bcrypt = require('bcryptjs');
 
 const SECRET_KEY = 'EjSOFTFASTCAR';
 
+//Middelware para verificar la autenticacion del token
+exports.authenticate = async (req, res, next) => {
+    //Se verifica que se llegue un token de autenticacion
+    const authHeader = req.headers.authorization;
+    if(!authHeader){
+        res.status(401).send('El Token es necesario para esta operación');
+        return;
+    }
+    //Se verifica que el token que llega sea del tipo Bearer Token
+    const [type, token] = authHeader.split(' ');
+    if(type !== 'Bearer'){
+        res.status(401).send('Tipo de Autorizacion no valida');
+        return;
+    }
+
+    try{
+        //Se decodifica el token
+        const decoded = jwt.verify(token, SECRET_KEY);
+        const {email} = decoded;
+        /*Se establece la conexion y consulta para verificar que el usuario 
+        que se llega exista en la base de datos*/
+        const connection = await getConnection();
+        const userData = await connection.query("call sp_login(?)",[email]);
+        if(userData[0][0].length>0){
+            //Si se encuentra el usuario en la base de datos pasa a la siguiente operacion
+            next();
+        }else{
+            res.status(401).send('No tienes permiso para realizar esta operación');
+            return;
+        }
+    }catch(err){
+        res.status(401).send('Token Inválido');
+        return;
+    }
+}
+
 const getUser = async (req,res) =>{
     try{
         const connection = await getConnection();
@@ -40,13 +76,13 @@ const login = async(req, res) =>{
         const connection = await getConnection();
         const result = await connection.query("call sp_login(?)",[email]);
         if(result[0][0].length == 0){
-            res.status(401).send('Email o contraseña incorrecta');
+            res.status(401).send('Credenciales incorrecta');
             return;
         }
         console.log(password);
         const isMatch = await bcrypt.compare(password, result[0][0].password);
         if(!isMatch){
-            res.status(401).send('Email o contraseña incorrecta');
+            res.status(401).send('Credenciales incorrecta');
         }else{
             const user = {"Email": result[0][0].email,"Rol": result[0][0].rol,"Nombre": result[0][0].nombre};
             const payload = {user};

@@ -15,16 +15,20 @@ admin.initializeApp({
 const bucket = admin.storage().bucket();
 
 const empleadoImagen = (req,res,next) =>{
-    uploadFile(req,res,next,"imagenes/empleados/");
+    const {id} = req.params;
+    uploadFile(req,res,next,"imagenes/empleados/",id);
+}
+const sliderImagen = (req,res,next) =>{
+    const {id} = req.params;
+    uploadFile(req,res,next,"imagenes/slider/",id);
 }
 
 //Funcion para subir una imagen
-function uploadFile(req,res,next,path){
+function uploadFile(req,res,next,path,id){
     if(!req.file){
         console.log('Fallo al guardar la imagen',req.file);
         res.status(401).send("Fallo al guardar la imagen");
     }else {
-        const {id} = req.params;
         const imagen = req.file;
         const nombreImagen = id+'.'+imagen.originalname.split('.').pop();
 
@@ -45,23 +49,20 @@ function uploadFile(req,res,next,path){
 
             'date': Date.now(),
             'directoryUrl': 'https://storage.googleapis.com/'+file.metadata.bucket,
-            'directory': "imagenes/empleados/"+nombreImagen,
+            'directory': path+"/"+nombreImagen,
             'bucketUrl': file.metadata.bucket,
             'fileName': nombreImagen
             };
             const token = jwt.sign(payload, SECRET_KEY);
             req.file.firebaseUrl = 'https://storage.googleapis.com/'+file.metadata.bucket+'/'+file.metadata.name+'?token='+token;
             req.file.token = token;
-            next();
-            
-
-            
+            next(); 
         });
         stream.end(imagen.buffer);
 
     }
-} 
+};
 
 export const methods = {
-    empleadoImagen
+    empleadoImagen,sliderImagen
 }
